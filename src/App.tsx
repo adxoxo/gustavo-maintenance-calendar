@@ -39,9 +39,6 @@ export default function App({ source = sourceData }: AppProps) {
       {source.ok ? <MaintenanceCalendar data={source.data} /> : <DataError errors={source.errors} />}
       <footer className="footer">
         <span>Mark done starts the next maintenance cycle. Changes reset on refresh.</span>
-        <a className="footer-link" href={`${import.meta.env.BASE_URL}developer-walkthrough.html`}>
-          Developer walkthrough
-        </a>
       </footer>
     </div>
   )

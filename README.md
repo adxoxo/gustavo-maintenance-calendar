@@ -8,7 +8,7 @@ The app reads the two supplied CSV files. It has no server, database, login, or 
 
 [![A frame from the demo: Fire alarm inspection marked done, with new dates, the Completed today button, and the floating confirmation](docs/demo/maintenance-flow.png)](docs/demo/maintenance-flow.mp4)
 
-[Watch the 52-second screen recording](docs/demo/maintenance-flow.mp4) (MP4, H.264, no audio). It shows real mouse clicks and key presses on a local production build (`npm run build` and `npm run preview`). The app used the real local date, November 9, 2026. The caption bar below the app frame describes each action. The pointer and click rings were drawn afterwards from the recorded mouse positions, because headless browser capture has no visible pointer.
+[Watch the 47-second screen recording](docs/demo/maintenance-flow.mp4) (MP4, H.264, no audio). It shows real mouse clicks and key presses on a local production build (`npm run build` and `npm run preview`). The app used the real local date, November 9, 2026. The caption bar below the app frame describes each action. The pointer and click rings were drawn afterwards from the recorded mouse positions, because headless browser capture has no visible pointer.
 
 | Time | Action in the clip |
 | --- | --- |
@@ -21,8 +21,7 @@ The app reads the two supplied CSV files. It has no server, database, login, or 
 | 0:31 | **Show all tasks** resets both filters. The overdue count is now 5 |
 | 0:34 | **Mark done** on Fire alarm inspection updates the row in place. The overdue count is now 4 |
 | 0:39 | **Dismiss confirmation** closes the message. Focus returns to the row without a scroll |
-| 0:42 | The footer link opens the offline developer walkthrough and leaves the app page |
-| 0:47 | A `path:line` link opens the embedded source at `handleMarkDone` in `src/App.tsx` |
+| 0:42 | The clip ends on the app: completions live in browser memory only, and a page refresh resets them to the CSV values |
 
 ## Quick start
 
@@ -46,12 +45,10 @@ http://localhost:5173/
 ```bash
 npm ci              # install the exact versions in package-lock.json
 npm run dev         # development server, normally http://localhost:5173/
-npm run build       # regenerate the walkthrough, type-check, and build into dist/
+npm run build       # type-check and build into dist/
 npm run preview     # serve the production build from dist/, normally http://localhost:4173/
-npm test            # unit, loader, App journey, and walkthrough reference checks
+npm test            # unit, loader, and App journey checks
 npm run lint        # ESLint
-npm run docs        # regenerate public/developer-walkthrough.html only
-npm run docs:check  # exit 1 if the walkthrough is out of date
 ```
 
 ## Decisions and reasons
@@ -112,8 +109,6 @@ handleMarkDone(item_id) ─ todayLocal() once ─ guard: done on that date? stop
 | `src/domain/maintenance.ts` | `completeItem`, `toMaintenanceRow`, `buildPropertyGroups`, `matchesView`, `countViews`, `filterGroupsByView` |
 | `src/App.tsx` | Page state, today refresh, `handleMarkDone`, property and View filters, counts, empty state, floating confirmation and its handlers |
 | `src/components/*.tsx` | Property section, task row, and data error panel |
-| `scripts/` | Walkthrough generator and its reference checks |
-| `public/developer-walkthrough.html` | Generated offline developer guide |
 | `docs/demo/` | Demo recording and poster |
 
 - **Data read.** The loader parses both CSV strings with Papa Parse. IDs stay strings. `frequency_months` becomes a positive safe integer.
@@ -139,27 +134,12 @@ handleMarkDone(item_id) ─ todayLocal() once ─ guard: done on that date? stop
 
 On November 9, 2026, the supplied data shows five properties, fifteen tasks, and six overdue tasks: items 1, 5, 6, 9, 13, and 14. The overdue count depends on the date you run the app.
 
-## Developer walkthrough
-
-`public/developer-walkthrough.html` is a single offline HTML file. It traces the CSV read path and the Mark done path in six steps each, including the View filter, the Completed today button, and the floating confirmation. It also lists fields, page UI state, functions, components, and date, view, and focus rules.
-
-To open it:
-
-- With `npm run dev` or `npm run preview`, use the **Developer walkthrough** link in the app footer, or open `/developer-walkthrough.html` on the same local URL.
-- Without a server, download the file (or use your clone) and open it directly in a browser. It needs no server, CDN, or editor.
-- The GitHub file view shows the HTML source only. It does not run the page.
-
-Every `path:line` link comes from the actual source. `scripts/generate-walkthrough.mjs` finds each function, field, call site, state write, and JSX element in the TypeScript syntax tree, and it fails if a target is missing or ambiguous. The links open an embedded copy of the referenced source files with the target line highlighted.
-
-`npm run build` regenerates the file first. After a source edit, run `npm run docs` to regenerate the exact file-and-line guide, or `npm run docs:check` to confirm it is current. The step data snapshots are explanatory examples fixed to November 8, 2026; the code excerpts are current source lines.
-
 ## Tests
 
 - `src/domain/dates.test.ts`: month-end clamps (including items 2, 3, 11, and 15), leap year, year change, due-today boundary, local midnight, date validation.
 - `src/domain/maintenance.test.ts`: grouping and overdue IDs with the real CSVs, single-item completion without mutation, same-day repeat, unknown ID, `completed_today`, the due-today view boundary, view counts, and view filtering that recounts overdue rows and removes empty groups.
 - `src/data/loadMaintenance.test.ts`: supplied files (including the CRLF properties file), quoted commas, blank lines, and each rejection rule.
 - `src/App.test.tsx`: the user journey with a frozen local date (`vi.useFakeTimers({ toFake: ['Date'] })`): counts, Mark done, the Completed today button state, unchanged neighbors, same-day repeat, refresh reset, keyboard completion with kept focus, property and View filters, focus when a row leaves Due & overdue, View completed today, Dismiss with kept scroll and row focus, the empty state and reset, focus refresh of today, the first click after midnight, a source row completed today, and the error panel.
-- `scripts/walkthrough.test.mjs`: every documented reference lands on the intended line, and the generated file is portable and offline.
 
 ## Visual design
 
