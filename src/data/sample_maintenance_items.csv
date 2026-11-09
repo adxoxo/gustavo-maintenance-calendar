@@ -1,0 +1,16 @@
+item_id,property_id,task,category,frequency_months,last_completed
+1,P1,Fire alarm inspection,Fire and life safety,12,2025-11-03
+2,P1,Landscaping service,Grounds,1,2026-10-31
+3,P1,HVAC filter change,HVAC,3,2026-08-31
+4,P2,Roof inspection,Roof,6,2026-05-20
+5,P2,Fire sprinkler test,Fire and life safety,12,2025-10-15
+6,P2,Parking lot sweeping,Grounds,1,2026-09-28
+7,P3,Backflow preventer test,Plumbing,12,2025-12-15
+8,P3,Landscaping service,Grounds,1,2026-10-20
+9,P3,Parking lot light check,Electrical,3,2026-07-15
+10,P4,Fire extinguisher inspection,Fire and life safety,12,2025-11-20
+11,P4,HVAC preventive service,HVAC,6,2026-05-31
+12,P4,Gutter cleaning,Roof,6,2026-07-10
+13,P5,Elevator inspection,Elevator,12,2025-10-25
+14,P5,Pest control,General,1,2026-10-05
+15,P5,Roof inspection,Roof,6,2026-08-31
